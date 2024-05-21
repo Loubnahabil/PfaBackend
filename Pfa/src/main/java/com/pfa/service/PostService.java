@@ -8,16 +8,16 @@ public interface PostService {
 
 	Post createNewPost(Post post, Integer userId)throws Exception;
 	
-	String deletePost(Integer postId,Integer UserId);
+	String deletePost(Integer postId,Integer userId) throws Exception;
 	
 	List<Post> FindPostByUserId(Integer userId);
 	
-	Post findPostById(Integer postId);
+	Post findPostById(Integer postId) throws Exception;
 	
 	List<Post> findAllPost();
 	
-	Post savedPost(Integer postId, Integer userId);
+	Post savedPost(Integer postId, Integer userId) throws Exception;
 	
-	Post likePost(Integer postId,Integer userId);
+	Post likePost(Integer postId,Integer userId) throws Exception;
 	
 }
