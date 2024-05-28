@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pfa.config.JwtProvider;
 import com.pfa.models.User;
 import com.pfa.repository.UserRepository;
 
@@ -47,16 +48,16 @@ User newUser = new User();
 	}
 
 	@Override
-	public User followUser(Integer userId1, Integer userId2) throws Exception {
+	public User followUser(Integer reqUserId, Integer userId2) throws Exception {
 		
-		User user1=findUserById(userId2);
+		User reqUser=findUserById(reqUserId);
 		User user2=findUserById(userId2);
-		user2.getFollowers().add(user1.getId());
-		user1.getFollowers().add(user2.getId());
-		userRepository.save(user1);
+		user2.getFollowers().add(reqUser.getId());
+		reqUser.getFollowings().add(user2.getId());
+		userRepository.save(reqUser);
 		userRepository.save(user2);
 
-		return user1;
+		return reqUser;
 	}
 
 	@Override
@@ -80,6 +81,10 @@ User newUser = new User();
 			oldUser.setEmail(user.getEmail());
 			
 		}
+		if(user.getGender()!=null) {
+			oldUser.setGender(user.getGender());
+			
+		}
 		
 		User updatedUser=userRepository.save(oldUser);
 		
@@ -89,6 +94,14 @@ User newUser = new User();
 	@Override
 	public List<User> searchUser(String query) {
 		return userRepository.searchUser(query);
+	}
+
+	@Override
+	public User findUserByJwt(String jwt) {
+		String email=JwtProvider.getEmailFromJwtToken(jwt);
+		
+		User user=userRepository.findByEmail(email);
+		return null;
 	}
 
 }
